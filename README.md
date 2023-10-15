@@ -109,7 +109,7 @@ As support for importing is not planned, there is currently no plan to implement
     - there is no way to identify which track of a media is being used, therefore the add-on currently assumes there is only one track per media
     - the framerates involved in decoding a media are not exposed. As Blender renders video textures at the scene's output framerate, currently that value is used to set the timed accessor's *suggestedUpdateRate*
 5. when export fails because of invalid input (eg. stereo audio, invalid attenuation model ...) there is no easy to clear error message. It exports gltf but without the extensions.
-6. audio attenuation function names in the json schema doesn't match the values in FDIS
+6. audio attenuation function names in the json schema don't match the values in FDIS
 
 
 ## License
