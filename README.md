@@ -1,4 +1,4 @@
-# rt-xr-blender-exported
+# rt-xr-blender-exporter
 
 This Blender add-on adds support for [MPEG_* glTF extensions](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Vendor) to the built-in gltf exporter.
 
@@ -29,14 +29,14 @@ If the add-on isn't showing show up in the add-on list after this step, try relo
 
 In Blender's preferences panel, select the [`Add-ons` section]((https://docs.blender.org/manual/en/3.6/editors/preferences/addons.html)). 
 
-The add-on is found under the 'Import-Export' and is named 'glTF 2.0 MPEG extensions'.
+The add-on is found under the 'Import-Export' and is named 'rt-xr-blender-exporter'.
 
 Tick the checkbox to enable the add-on.
 
 
 ### Uninstalling
 
-To uninstall, simply undo the installation steps. Make sure to disable only 'Import-Export: glTF 2.0 MPEG extensions'.
+To uninstall, simply undo the installation steps. Make sure to disable only 'Import-Export: rt-xr-blender-exporter'.
 
 /!\ **DO NOT remove Blender's built-in glTF add-on: 'Import-Export: glTF 2.0 format'** as it would remove support for gltf in blender.
 
