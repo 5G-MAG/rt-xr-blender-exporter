@@ -138,3 +138,19 @@ class glTF2ExportUserExtension(glTF2ExportMpegExtension):
     @property
     def enabled(self): 
         return bpy.context.scene.MPEG_ExporterProperties.enabled
+
+
+##################################################################################
+# importer stub - normaly import would fail totaly, 
+#   but here MPEG_* extensions will be simply ignored.
+#
+# class glTF2ImportUserExtension:
+# 
+#     def __init__(self):
+#         self.extensions = [
+#             Extension(name="MPEG_media", extension={}, required=True), 
+#             Extension(name="MPEG_buffer_circular", extension={}, required=True),
+#             Extension(name="MPEG_accessor_timed", extension={}, required=True),
+#             Extension(name="MPEG_texture_video", extension={}, required=True),
+#             Extension(name="MPEG_audio_spatial", extension={}, required=True)
+#         ]
