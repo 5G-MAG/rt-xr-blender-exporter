@@ -194,10 +194,10 @@ class MPEGAudioSpatialReverb:
 class Attenuation(Enum):
     """A function used to calculate the attenuation of the audio source."""
     custom = "custom"
-    exponentialDistance = "exponential_distance"
-    inverseDistance = "inverse_distance"
-    linearDistance = "linear_distance"
-    noAttenuation = "no_attenuation"
+    exponentialDistance = "exponentialDistance"
+    inverseDistance = "inverseDistance"
+    linearDistance = "linearDistance"
+    noAttenuation = "noAttenuation"
 
 
 class TypeEnum(Enum):
