@@ -1,12 +1,18 @@
-# rt-xr-blender-exporter
+<h1 align="center">Blender Exporter</h1>
+<p align="center">
+  <img src="https://img.shields.io/badge/Status-Under_Development-yellow" alt="Under Development">
+  <img src="https://img.shields.io/github/v/tag/5G-MAG/rt-xr-blender-exporter?label=version" alt="Version">
+  <img src="https://img.shields.io/badge/License-5G--MAG%20Public%20License%20(v1.0)-blue" alt="License">
+</p>
 
-This Blender add-on adds support for [MPEG_* glTF extensions](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Vendor) to the built-in gltf exporter.
+## Introduction
+This Blender add-on adds support for [MPEG_* glTF extensions](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Vendor) to the built-in glTF exporter.
 
+Additional information can be found at: https://5g-mag.github.io/Getting-Started/pages/xr-media-integration-in-5g/
 
-## Installation
+## Installing
 
-The addon is compatible with Blender 3.6.
-
+The add-on is compatible with Blender 3.6.
 
 ### 1. Get the source code:
 
@@ -34,14 +40,14 @@ The add-on is found under the 'Import-Export' and is named 'rt-xr-blender-export
 Tick the checkbox to enable the add-on.
 
 
-### Uninstalling
+## Uninstalling
 
 To uninstall, simply undo the installation steps. Make sure to disable only 'Import-Export: rt-xr-blender-exporter'.
 
 /!\ **DO NOT remove Blender's built-in glTF add-on: 'Import-Export: glTF 2.0 format'** as it would remove support for gltf in blender.
 
 
-## Usage
+## Using
 
 This add-on [extends Blender's core gltf exporter](https://docs.blender.org/manual/en/3.6/addons/import_export/scene_gltf2.html#third-party-gltf-extensions). Import is currently not supported.
 
@@ -50,7 +56,6 @@ To use it, follow the usual glTF export procedure: *File > Export > glTF 2.0 (.g
 Exporting MPEG_* extension can be enabled or disabled from the export panel directly:
 
 ![export panel options](/doc/img/export-panel-options.jpg)
-
 
 
 ### MPEG_texture_video
@@ -67,7 +72,7 @@ All Image textures with a movie source are exported as MPEG_texture_video extens
 
 ### MPEG_audio_spatial
 
-#### audio sources 
+#### Audio sources 
 
 To add an audio source to the scene:
 
@@ -99,7 +104,6 @@ Testing will to use gltf-validator to ensure conformance of the output.
 
 As support for importing is not planned, there is currently no plan to implement round-trip tests.
 
-
 ## Limitations
 
 1. **Media MUST have a single track**. handling media tracks is not possible with Blender API only, third party libraries may be required (especialy to probe codecs). Another option is to add a panel for users to manually configure tracks assuming they know understand the tracks in their media (error prone).
@@ -111,13 +115,10 @@ As support for importing is not planned, there is currently no plan to implement
 5. when export fails because of invalid input (eg. stereo audio, invalid attenuation model ...) there is no easy to clear error message. It exports gltf but without the extensions.
 6. Import is not supported, see : https://github.com/5G-MAG/rt-xr-blender-exporter/issues/1#issuecomment-1948209409
 
-
 ## License
 
-Licensed under the License terms and conditions for use, reproduction, and distribution of 5GMAG software (the “License”).
+Licensed under the License terms and conditions for use, reproduction, and distribution of 5G-MAG Public License v1.0 (the “License”).
 
 You may not use this file except in compliance with the License. You may obtain a copy of the License at https://www.5g-mag.com/license .
 
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an “AS IS” BASIS,
-
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an “AS IS” BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
