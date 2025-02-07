@@ -40,7 +40,10 @@ class glTF2ExportMpegExtension:
 
     def gather_gltf_extensions_hook(self, gltf2_object, export_settings):
         if self.enabled and export_settings["mpeg_media_exports"]:
-            MediaLibrary.export(export_settings)
+            try:
+                MediaLibrary.export(export_settings)
+            except BaseException as e:
+                print(e)
         _fix_up_buffer_references(gltf2_object, export_settings)
 
 
