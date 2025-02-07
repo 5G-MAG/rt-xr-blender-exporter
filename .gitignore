@@ -1,4 +1,5 @@
 addons/blender-debugger-for-vscode/
+.DS_store
 
 launch.json
 
