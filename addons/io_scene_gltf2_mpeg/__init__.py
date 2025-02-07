@@ -144,13 +144,16 @@ class glTF2ExportUserExtension(glTF2ExportMpegExtension):
 # importer stub - normaly import would fail totaly, 
 #   but here MPEG_* extensions will be simply ignored.
 #
-# class glTF2ImportUserExtension:
-# 
-#     def __init__(self):
-#         self.extensions = [
-#             Extension(name="MPEG_media", extension={}, required=True), 
-#             Extension(name="MPEG_buffer_circular", extension={}, required=True),
-#             Extension(name="MPEG_accessor_timed", extension={}, required=True),
-#             Extension(name="MPEG_texture_video", extension={}, required=True),
-#             Extension(name="MPEG_audio_spatial", extension={}, required=True)
-#         ]
+
+from io_scene_gltf2.io.com.gltf2_io_extensions import Extension
+
+class glTF2ImportUserExtension:
+
+    def __init__(self):
+        self.extensions = [
+            Extension(name="MPEG_media", extension={}, required=True), 
+            Extension(name="MPEG_buffer_circular", extension={}, required=True),
+            Extension(name="MPEG_accessor_timed", extension={}, required=True),
+            Extension(name="MPEG_texture_video", extension={}, required=True),
+            Extension(name="MPEG_audio_spatial", extension={}, required=True)
+        ]
