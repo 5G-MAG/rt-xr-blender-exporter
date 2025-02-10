@@ -12,8 +12,12 @@ import importlib
 import inspect
 import pkgutil
 from pathlib import Path
+from .blender.ui.anchoring import register_xr_anchors, unregister_xr_anchors
 
 import bpy
+import logging
+
+log = logging.getLogger(__name__)
 
 bl_info = {
     "name": "rt-xr-blender-exporter",
@@ -56,6 +60,7 @@ class MPEG_ExporterProperties(bpy.types.PropertyGroup):
         default=True,
     )
 
+    # TODO: autodetect & use manual config to force re-encoding
     audio_object_codec: bpy.props.EnumProperty(
         items= [
             ('MP3', "mp3", ""),
@@ -98,11 +103,13 @@ class GLTF_PT_MPEGExporterExtensionPanel(bpy.types.Panel):
 
 
 def register():
+    register_xr_anchors()
     bpy.utils.register_class(MPEG_ExporterProperties)
     bpy.types.Scene.MPEG_ExporterProperties = bpy.props.PointerProperty(type=MPEG_ExporterProperties)
 
 
 def unregister():
+    unregister_xr_anchors()
     unregister_panel()
     bpy.utils.unregister_class(MPEG_ExporterProperties)
     del bpy.types.Scene.MPEG_ExporterProperties
