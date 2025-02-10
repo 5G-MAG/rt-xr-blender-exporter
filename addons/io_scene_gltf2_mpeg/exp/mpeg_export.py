@@ -12,6 +12,7 @@ import bpy
 
 from .mpeg_video_texture import get_video_texture_extension
 from .mpeg_audio_source import get_audio_source_extension
+from .mpeg_anchor import AnchorRegistry
 from .mpeg_media import MediaLibrary
 
 class glTF2ExportMpegExtension:
@@ -27,6 +28,11 @@ class glTF2ExportMpegExtension:
                 return
             _add_gltf_extension(gltf2_object, ext)
             self.audio_source_id += 1
+        if blender_node.xr_anchor.enabled:
+            ext = AnchorRegistry.get_node_anchor_extension(blender_node)
+            if ext is None:
+                return
+            _add_gltf_extension(gltf2_object, ext)
 
     def gather_texture_hook(self, texture, blender_shader_sockets, export_settings):
         if not self.enabled:
