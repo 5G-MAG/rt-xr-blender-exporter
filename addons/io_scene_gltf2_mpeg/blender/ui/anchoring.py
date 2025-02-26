@@ -1,4 +1,16 @@
 import bpy
+import logging
+from .markers import register_markers, unregister_markers, XRMarkerFactory
+
+ANCHORABLE_TYPES = (
+    'CAMERA',
+    'LIGHT',
+    'MESH',
+    'NODETREE',
+    'SCENE',
+    'SPEAKER',
+    'EMPTY'
+)
 
 XR_TRACKABLE_TYPES = [
     ('TRACKABLE_FLOOR', "Floor", "Anchor to the floor"),
@@ -22,20 +34,20 @@ ANCHOR_ALIGNMENT = [
     ('ALIGNED_SCALED', 'Scaled', 'Scaled')
 ]
 
+def xr_marker_2d_list(struct, context):
+    return ((obj.xr_marker.name, obj.xr_marker.name, str(obj)) for obj in XRMarkerFactory.iter_xr_marker_objects())
+
+
 class XRAnchorObjectProperties(bpy.types.PropertyGroup):
     enabled: bpy.props.BoolProperty()
     #############################################
     # TRACKABLE OBJECT PROPERTIES
     trackable_type: bpy.props.EnumProperty(items=XR_TRACKABLE_TYPES)
-    trackable_controller: bpy.props.StringProperty(
-        name="Path"
-    )
+    trackable_controller: bpy.props.StringProperty(name="XrPath")
     trackable_plane: bpy.props.EnumProperty(items=TRACKABLE_GEOMETRIC_CONSTRAINT)
-    trackable_marker_2D: bpy.props.PointerProperty(
-        type=bpy.types.Image,
-        name="2D marker"
-    )
+    trackable_marker_2d: bpy.props.EnumProperty(items=xr_marker_2d_list)
     trackable_marker_geo: bpy.props.FloatVectorProperty(name="Geo coords")
+    trackable_id: bpy.props.StringProperty(name="Custom ID")
     #############################################
     # ANCHOR OBJECT PROPERTIES
     requiresAnchoring: bpy.props.BoolProperty(name="Requires anchoring")
@@ -43,10 +55,9 @@ class XRAnchorObjectProperties(bpy.types.PropertyGroup):
     aligned: bpy.props.BoolProperty(name="Aligned")
 
 
-
-class OBJECT_OT_set_xr_anchor_type(bpy.types.Operator):
+class XRAnchor_OT_SetType(bpy.types.Operator):
     bl_idname = "object.set_xr_anchor_type"
-    bl_label = "Set Anchoring Type"
+    bl_label = "Anchor"
     bl_description = "Set the anchoring type for the selected object"
 
     trackable_type: bpy.props.EnumProperty(items=XR_TRACKABLE_TYPES)
@@ -60,22 +71,44 @@ class OBJECT_OT_set_xr_anchor_type(bpy.types.Operator):
         obj.xr_anchor.trackable_type = self.trackable_type
         return {'FINISHED'}
 
+class XRAnchor_OT_SelectXrMarker2d(bpy.types.Operator):
+    bl_idname = "object.select_xr_marker_2d"
+    bl_label = "Marker"
+    bl_description = "Select a 2D marker"
 
-class OBJECT_PT_xr_anchor_panel(bpy.types.Panel):
-    bl_label = "XR anchoring"
-    bl_idname = "OBJECT_PT_xr_anchor_panel"
+    trackable_marker_2d: bpy.props.EnumProperty(items=xr_marker_2d_list)
+
+    def execute(self, context):
+        obj = context.object
+        if obj is None:
+            self.report({'WARNING'}, "No active object selected.")
+            return {'CANCELLED'}
+        obj.xr_anchor.trackable_marker_2d = self.trackable_marker_2d
+        return {'FINISHED'}
+
+
+class XrAnchorObjectPropertiesPanel(bpy.types.Panel):
+    bl_label = "XR Anchoring"
+    bl_idname = "OBJECT_PT_XrAnchor"
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
     bl_context = 'object'
-    
+
+    @classmethod
+    def poll(cls, context):
+        return context.object.type in ANCHORABLE_TYPES
+
     def draw(self, context):
         layout = self.layout
         obj = context.object
         if obj is None:
             layout.label(text="No active object selected.")
         else:
-            xr_anchor = obj.xr_anchor
             row = layout.row()
+            if obj.xr_marker.enabled:
+                row.label(text=f'XR Marker: {str(obj.xr_marker)}')
+                return
+            xr_anchor = obj.xr_anchor
             row.prop(xr_anchor, "enabled") 
             if not xr_anchor.enabled:
                 return
@@ -86,28 +119,39 @@ class OBJECT_PT_xr_anchor_panel(bpy.types.Panel):
                 row.prop(xr_anchor, "trackable_controller") 
             elif xr_anchor.trackable_type == 'TRACKABLE_PLANE':
                 row = layout.row()
-                row.prop(xr_anchor, "trackable_plane") 
+                row.prop(xr_anchor, "trackable_plane")
             elif xr_anchor.trackable_type == 'TRACKABLE_MARKER_2D':
                 row = layout.row()
-                row.prop(xr_anchor, "trackable_marker_2D")
-                # row.template_ID(xr_anchor, "marker_2D", new="image.new", open="image.open")
+                if XRMarkerFactory.scene_has_markers():
+                    row.operator_menu_enum("object.select_xr_marker_2d", "xr_marker_id", text=xr_anchor.trackable_marker_2d)
+                else:
+                    # TODO: set focus on the panel for users to create anchor
+                    row.label(text='no XR marker found')
             elif xr_anchor.trackable_type == 'TRACKABLE_MARKER_GEO':
                 row = layout.row()
                 row.prop(xr_anchor, "trackable_marker_geo")
-            elif xr_anchor.trackable_type == 'TRACKABLE_MARKER_3D' or \
-                    xr_anchor.trackable_type == 'TRACKABLE_MARKER_APPLICATION':
-                row = layout.row()
-                row.label(text="request this feature on github")
+            elif xr_anchor.trackable_type == 'TRACKABLE_MARKER_3D':
+                row = layout.label(text="Not Available")
+            elif xr_anchor.trackable_type == 'TRACKABLE_MARKER_APPLICATION':
+                row.prop(xr_anchor, "trackable_id") 
 
+classes = [
+    XRAnchor_OT_SetType,
+    XRAnchor_OT_SelectXrMarker2d,
+    XrAnchorObjectPropertiesPanel
+]
 
 def register_xr_anchors():
+    register_markers()
     bpy.utils.register_class(XRAnchorObjectProperties)
     bpy.types.Object.xr_anchor = bpy.props.PointerProperty(type=XRAnchorObjectProperties)
-    bpy.utils.register_class(OBJECT_OT_set_xr_anchor_type)
-    bpy.utils.register_class(OBJECT_PT_xr_anchor_panel)
+    for cls in classes:
+       bpy.utils.register_class(cls)
+
 
 def unregister_xr_anchors():
-    bpy.utils.unregister_class(OBJECT_PT_xr_anchor_panel)
-    bpy.utils.unregister_class(OBJECT_OT_set_xr_anchor_type)
-    bpy.utils.unregister_class(XRAnchorObjectProperties)
     del bpy.types.Object.xr_anchor
+    bpy.utils.unregister_class(XRAnchorObjectProperties)
+    for cls in reversed(classes):
+        bpy.utils.unregister_class(cls)
+    unregister_markers()

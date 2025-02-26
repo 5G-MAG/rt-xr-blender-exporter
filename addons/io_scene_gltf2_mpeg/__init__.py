@@ -103,6 +103,7 @@ class GLTF_PT_MPEGExporterExtensionPanel(bpy.types.Panel):
 
 
 def register():
+    register_panel()
     register_xr_anchors()
     bpy.utils.register_class(MPEG_ExporterProperties)
     bpy.types.Scene.MPEG_ExporterProperties = bpy.props.PointerProperty(type=MPEG_ExporterProperties)
