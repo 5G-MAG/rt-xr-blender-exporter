@@ -52,7 +52,6 @@ class glTF2ExportMpegExtension:
                 except BaseException as e:
                     print(e)
             _fix_up_buffer_references(gltf2_object, export_settings)
-        if not export_settings.get("mpeg_anchor_debug"):
             _fix_anchoring_marker_nodes(gltf2_object, export_settings)
     
 
@@ -84,9 +83,9 @@ def _fix_anchoring_marker_nodes(gltf2_object, export_settings):
                 i = node_name_i_map[marker_node_name]
                 marker_nodes_i.add(i)
                 t["markerNode"] = i
-        # prevent marker node instantiation
-        for s in gltf2_object.scenes:
-            s.nodes = [i for i in s.nodes if not i in marker_nodes_i]
         # marker nodes can't have parents
         for n in gltf2_object.nodes:
             n.children = [i for i in n.children if not i in marker_nodes_i]
+        # prevent marker node instantiation
+        for s in gltf2_object.scenes:
+            s.nodes = [i for i in s.nodes if not i in marker_nodes_i]
