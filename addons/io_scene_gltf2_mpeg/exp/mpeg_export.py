@@ -45,13 +45,16 @@ class glTF2ExportMpegExtension:
         _add_gltf_extension(texture, ext)
 
     def gather_gltf_extensions_hook(self, gltf2_object, export_settings):
-        if self.enabled and export_settings["mpeg_media_exports"]:
-            try:
-                MediaLibrary.export(export_settings)
-            except BaseException as e:
-                print(e)
-        _fix_up_buffer_references(gltf2_object, export_settings)
-
+        if self.enabled:
+            if export_settings["mpeg_media_exports"]:
+                try:
+                    MediaLibrary.export(export_settings)
+                except BaseException as e:
+                    print(e)
+            _fix_up_buffer_references(gltf2_object, export_settings)
+        if not export_settings.get("mpeg_anchor_debug"):
+            _fix_anchoring_marker_nodes(gltf2_object, export_settings)
+    
 
 def _add_gltf_extension(gltf_object, extension):
     if gltf_object.extensions is None:
@@ -70,4 +73,20 @@ def _fix_up_buffer_references(gltf2_object, export_settings):
             gltf2_object.buffer_views[accessor.buffer_view].buffer = main_buffer_id
 
 
-
+def _fix_anchoring_marker_nodes(gltf2_object, export_settings):
+    if "MPEG_anchor" in gltf2_object.extensions:
+        marker_nodes_i = set()
+        node_name_i_map = {n.name: i for i, n in enumerate(gltf2_object.nodes)}
+        # replace marker node name with node indice
+        for t in gltf2_object.extensions["MPEG_anchor"]["trackables"]:
+            marker_node_name = t.get("markerNode") 
+            if marker_node_name:
+                i = node_name_i_map[marker_node_name]
+                marker_nodes_i.add(i)
+                t["markerNode"] = i
+        # prevent marker node instantiation
+        for s in gltf2_object.scenes:
+            s.nodes = [i for i in s.nodes if not i in marker_nodes_i]
+        # marker nodes can't have parents
+        for n in gltf2_object.nodes:
+            n.children = [i for i in n.children if not i in marker_nodes_i]

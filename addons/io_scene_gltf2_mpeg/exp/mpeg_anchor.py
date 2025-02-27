@@ -14,13 +14,13 @@ def _get_trackable_dict(blender_node):
     elif xr_anchor.trackable_type == "TRACKABLE_MARKER_GEO":
         r["coordinates"] = [*xr_anchor.trackable_marker_geo]
     elif xr_anchor.trackable_type == "TRACKABLE_MARKER_2D":
-        # TODO: get the IDX of the node using this marker image
-        # r["markerNode"] = -1
-        pass
+        r["markerNode"] = xr_anchor.trackable_marker_node
     elif xr_anchor.trackable_type == "TRACKABLE_MARKER_3D":
-        pass
+        r["markerNode"] = xr_anchor.trackable_marker_3d
+    elif xr_anchor.trackable_type == "TRACKABLE_CONTROLLER":
+        r["path"] = xr_anchor.trackable_controller
     elif xr_anchor.trackable_type == "TRACKABLE_APPLICATION":
-        pass
+        r["id"] = xr_anchor.trackable_id
     return r
 
 def _get_anchor_dict(trackable_ext, blender_node):
@@ -50,10 +50,8 @@ class AnchorRegistry:
     trackable_viewer = None
     trackable_plane = {}
     trackable_controller = {}
-
-    # internal
-    marker_images = {}
-
+    trackable_marker_node = {}
+        
     @classmethod
     def _get_trackable_ext(cls, blender_node):
         xr_anchor = blender_node.xr_anchor
@@ -97,6 +95,16 @@ class AnchorRegistry:
                     extension=_get_trackable_dict(blender_node)
                 )
             trackable_ext = cls.trackable_controller[path]
+
+        if trackable_type == "TRACKABLE_MARKER_2D":
+            markerNode = xr_anchor.trackable_marker_node
+            if not (markerNode in cls.trackable_marker_node):
+                cls.trackable_marker_node[markerNode] = gltf2_io_extensions.ChildOfRootExtension(
+                    name="MPEG_anchor",
+                    path=["trackables"],
+                    extension=_get_trackable_dict(blender_node)
+                )
+            trackable_ext = cls.trackable_marker_node[markerNode]
 
         else:
             trackable_ext = gltf2_io_extensions.ChildOfRootExtension(
