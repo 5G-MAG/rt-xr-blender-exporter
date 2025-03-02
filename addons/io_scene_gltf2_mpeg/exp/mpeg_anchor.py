@@ -6,20 +6,28 @@ MPEG_ANCHOR = "MPEG_anchor"
 
 def _get_trackable_dict(blender_node):
     xr_anchor = blender_node.xr_anchor
-    r = {
-        "type": xr_anchor.trackable_type
-    }
-    if xr_anchor.trackable_type == "TRACKABLE_PLANE":
+    r = {}
+    if xr_anchor.trackable_type == "TRACKABLE_FLOOR":
+        r["type"] = 0
+    elif xr_anchor.trackable_type == "TRACKABLE_VIEWER":
+        r["type"] = 1
+    elif xr_anchor.trackable_type == "TRACKABLE_CONTROLLER":
+        r["type"] = 2
+        r["path"] = xr_anchor.trackable_controller
+    elif xr_anchor.trackable_type == "TRACKABLE_PLANE":
+        r["type"] = 3
         r["geometricConstraint"] = 0 if xr_anchor.trackable_plane == 'HORIZONTAL_PLANE' else 1
-    elif xr_anchor.trackable_type == "TRACKABLE_MARKER_GEO":
-        r["coordinates"] = [*xr_anchor.trackable_marker_geo]
     elif xr_anchor.trackable_type == "TRACKABLE_MARKER_2D":
+        r["type"] = 4
         r["markerNode"] = xr_anchor.trackable_marker_node
     elif xr_anchor.trackable_type == "TRACKABLE_MARKER_3D":
+        r["type"] = 5
         r["markerNode"] = xr_anchor.trackable_marker_3d
-    elif xr_anchor.trackable_type == "TRACKABLE_CONTROLLER":
-        r["path"] = xr_anchor.trackable_controller
+    elif xr_anchor.trackable_type == "TRACKABLE_MARKER_GEO":
+        r["type"] = 6
+        r["coordinates"] = [*xr_anchor.trackable_marker_geo]
     elif xr_anchor.trackable_type == "TRACKABLE_APPLICATION":
+        r["type"] = 7
         r["id"] = xr_anchor.trackable_id
     return r
 

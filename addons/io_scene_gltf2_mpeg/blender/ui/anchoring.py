@@ -1,5 +1,4 @@
 import bpy
-import logging
 from .markers import register_markers, unregister_markers, XRMarkerFactory
 
 ANCHORABLE_TYPES = (
