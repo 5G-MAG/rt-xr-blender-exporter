@@ -58,6 +58,33 @@ Exporting MPEG_* extension can be enabled or disabled from the export panel dire
 ![export panel options](/doc/img/export-panel-options.jpg)
 
 
+### MPEG_anchor
+
+### Configure anchoring of a node
+
+![configure anchor](/doc/img/anchoring-configrure-anchor.png)
+
+1. select the node to be anchored
+2. locate the XR Anchoring panel in object properties, select an anchor type and configure the anchor
+
+
+The following anchor types can be configured:
+- TRACKABLE_FLOOR
+- TRACKABLE_VIEWER
+- TRACKABLE_CONTROLLER
+- TRACKABLE_PLANE
+- TRACKABLE_MARKER_2D
+- TRACKABLE_MARKER_GEO
+- TRACKABLE_APPLICATION
+
+### Creating a 2D marker node
+
+![configure anchor](/doc/img/anchoring-create-marker-2d.png)
+
+1. locate the XR Anchoring panel (press N while the UI is focused on the 3D view)
+2. select an image and hit 'create marker node', the marker 2D node is added to the scene and can now be used to configure an anchor
+
+
 ### MPEG_texture_video
 
 To add a video and export it as MPEG_texture_video, first make sure that the blender's [scene output format](https://docs.blender.org/manual/en/3.6/render/output/properties/format.html) matches the framerate of the videos used as texture.
