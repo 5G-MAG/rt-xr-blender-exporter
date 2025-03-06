@@ -85,7 +85,7 @@ def _fix_anchoring_marker_nodes(gltf2_object, export_settings):
                 t["markerNode"] = i
         # marker nodes can't have parents
         for n in gltf2_object.nodes:
-            n.children = [i for i in n.children if not i in marker_nodes_i]
+            n.children = [i for i in n.children if i not in marker_nodes_i]
         # prevent marker node instantiation
         for s in gltf2_object.scenes:
-            s.nodes = [i for i in s.nodes if not i in marker_nodes_i]
+            s.nodes = [i for i in s.nodes if i not in marker_nodes_i]

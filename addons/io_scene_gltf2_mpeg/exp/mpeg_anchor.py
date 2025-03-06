@@ -19,7 +19,7 @@ def _get_trackable_dict(blender_node):
         r["geometricConstraint"] = 0 if xr_anchor.trackable_plane == 'HORIZONTAL_PLANE' else 1
     elif xr_anchor.trackable_type == "TRACKABLE_MARKER_2D":
         r["type"] = 4
-        r["markerNode"] = xr_anchor.trackable_marker_node
+        r["markerNode"] = xr_anchor.trackable_marker_node_name
     elif xr_anchor.trackable_type == "TRACKABLE_MARKER_3D":
         r["type"] = 5
         r["markerNode"] = xr_anchor.trackable_marker_3d
@@ -53,7 +53,7 @@ class AnchorRegistry:
     trackables = []
     anchors = []
 
-    # de-duplicate trrackables
+    # de-duplicate trackables
     trackable_floor = None
     trackable_viewer = None
     trackable_plane = {}
@@ -86,33 +86,36 @@ class AnchorRegistry:
 
         elif trackable_type == "TRACKABLE_PLANE":
             constraint = xr_anchor.trackable_plane
-            if not (constraint in cls.trackable_plane):
+            if constraint in cls.trackable_plane:
+                trackable_ext = cls.trackable_plane[constraint]
+            else:
                 cls.trackable_plane[constraint] = gltf2_io_extensions.ChildOfRootExtension(
                     name="MPEG_anchor",
                     path=["trackables"],
                     extension=_get_trackable_dict(blender_node)
                 )
-            trackable_ext = cls.trackable_plane[constraint]
 
         elif trackable_type == "TRACKABLE_CONTROLLER":
             path = xr_anchor.trackable_controller
-            if not (path in cls.trackable_plane):
+            if path in cls.trackable_plane:
+                trackable_ext = cls.trackable_controller[path]
+            else:
                 cls.trackable_controller[path] = gltf2_io_extensions.ChildOfRootExtension(
-                    name="MPEG_anchor",
-                    path=["trackables"],
-                    extension=_get_trackable_dict(blender_node)
-                )
-            trackable_ext = cls.trackable_controller[path]
-
+                        name="MPEG_anchor",
+                        path=["trackables"],
+                        extension=_get_trackable_dict(blender_node)
+                    )
+    
         if trackable_type == "TRACKABLE_MARKER_2D":
-            markerNode = xr_anchor.trackable_marker_node
-            if not (markerNode in cls.trackable_marker_node):
-                cls.trackable_marker_node[markerNode] = gltf2_io_extensions.ChildOfRootExtension(
+            marker_node_name = xr_anchor.trackable_marker_node_name
+            if marker_node_name in cls.trackable_marker_node:
+                trackable_ext = cls.trackable_marker_node[marker_node_name]
+            else:
+                cls.trackable_marker_node[marker_node_name] = gltf2_io_extensions.ChildOfRootExtension(
                     name="MPEG_anchor",
                     path=["trackables"],
                     extension=_get_trackable_dict(blender_node)
                 )
-            trackable_ext = cls.trackable_marker_node[markerNode]
 
         else:
             trackable_ext = gltf2_io_extensions.ChildOfRootExtension(
@@ -126,8 +129,11 @@ class AnchorRegistry:
 
     @classmethod
     def get_node_anchor_extension(cls, blender_node):
-
-        trackable_ext = cls._get_trackable_ext(blender_node)
+        trackable_ext = gltf2_io_extensions.ChildOfRootExtension(
+                    name="MPEG_anchor",
+                    path=["trackables"],
+                    extension=_get_trackable_dict(blender_node)
+                )
         
         anchor_ext = gltf2_io_extensions.ChildOfRootExtension(
             name="MPEG_anchor",

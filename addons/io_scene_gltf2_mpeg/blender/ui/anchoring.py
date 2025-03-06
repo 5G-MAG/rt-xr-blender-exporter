@@ -33,7 +33,7 @@ ANCHOR_ALIGNMENT = [
     ('ALIGNED_SCALED', 'Scaled', 'Scaled')
 ]
 
-def xr_marker_2d_list(struct, context):
+def xr_marker_2d_list_names(struct, context):
     return ((obj.xr_marker.name, obj.xr_marker.name, str(obj)) for obj in XRMarkerFactory.iter_xr_marker_objects())
 
 
@@ -44,7 +44,7 @@ class XRAnchorObjectProperties(bpy.types.PropertyGroup):
     trackable_type: bpy.props.EnumProperty(items=XR_TRACKABLE_TYPES)
     trackable_controller: bpy.props.StringProperty(name="XrPath")
     trackable_plane: bpy.props.EnumProperty(items=TRACKABLE_GEOMETRIC_CONSTRAINT)
-    trackable_marker_node: bpy.props.EnumProperty(items=xr_marker_2d_list)
+    trackable_marker_node_name: bpy.props.EnumProperty(items=xr_marker_2d_list_names)
     trackable_marker_geo: bpy.props.FloatVectorProperty(name="Geo coords")
     trackable_id: bpy.props.StringProperty(name="Custom ID")
     #############################################
@@ -75,14 +75,14 @@ class XRAnchor_OT_SelectXrMarker2d(bpy.types.Operator):
     bl_label = "Marker"
     bl_description = "Select a 2D marker"
 
-    trackable_marker_node: bpy.props.EnumProperty(items=xr_marker_2d_list)
+    trackable_marker_node_name: bpy.props.EnumProperty(items=xr_marker_2d_list_names)
 
     def execute(self, context):
         obj = context.object
         if obj is None:
             self.report({'WARNING'}, "No active object selected.")
             return {'CANCELLED'}
-        obj.xr_anchor.trackable_marker_node = self.trackable_marker_node
+        obj.xr_anchor.trackable_marker_node_name = self.trackable_marker_node_name
         return {'FINISHED'}
 
 
@@ -122,7 +122,7 @@ class XrAnchorObjectPropertiesPanel(bpy.types.Panel):
             elif xr_anchor.trackable_type == 'TRACKABLE_MARKER_2D':
                 row = layout.row()
                 if XRMarkerFactory.scene_has_markers():
-                    row.operator_menu_enum("object.select_xr_marker_2d", "xr_marker_id", text=xr_anchor.trackable_marker_node)
+                    row.operator_menu_enum("object.select_xr_marker_2d", "xr_marker_id", text=xr_anchor.trackable_marker_node_name)
                 else:
                     # TODO: set focus on the panel for users to create anchor
                     row.label(text='no XR marker found')
