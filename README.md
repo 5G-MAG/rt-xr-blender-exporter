@@ -12,12 +12,12 @@ Additional information can be found at: https://5g-mag.github.io/Getting-Started
 
 ## Installing
 
-The add-on is compatible with Blender 3.6.
+The add-on is compatible with [Blender 3.6](https://www.blender.org/download/releases/3-6/).
 
 ### 1. Get the source code:
 
 ```
-git clone https://github.com/5G-MAG/rt-xr-blender-exporter.git .
+git clone https://github.com/5G-MAG/rt-xr-blender-exporter.git
 ```
 
 ### 2. Add it to [Blender's script directories](https://docs.blender.org/manual/en/3.6/editors/preferences/file_paths.html#script-directories):
