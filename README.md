@@ -23,7 +23,7 @@ git clone https://github.com/5G-MAG/rt-xr-blender-exporter.git
 ### 2. Add it to [Blender's script directories](https://docs.blender.org/manual/en/3.6/editors/preferences/file_paths.html#script-directories):
 
 - open `Edit > Preferences ...`
-- on the left of the preferences panel, select the `File Paths` section
+- on the left of the preferences panel, select the `File Paths` section. Check [documentation](https://docs.blender.org/manual/en/3.6/editors/preferences/file_paths.html) for more information.
 - find the `Script Directories` sub-section add the directory where the git repo was cloned to the list (rt-xr-blender-exporter).
 - save the preferences
 
@@ -33,12 +33,10 @@ If the add-on isn't showing show up in the add-on list after this step, try relo
 
 ### 3. Enable the add-on
 
-In Blender's preferences panel, select the [`Add-ons` section]((https://docs.blender.org/manual/en/3.6/editors/preferences/addons.html)). 
-
-The add-on is found under the 'Import-Export' and is named 'rt-xr-blender-exporter'.
-
-Tick the checkbox to enable the add-on.
-
+- open `Edit > Preferences ...`
+- on the left of the preferences panel, select the [`Add-ons`] section. Check [documentation](https://docs.blender.org/manual/en/3.6/editors/preferences/addons.html) for more information.
+- find the 'rt-xr-blender-exporter' add-on under the 'Import-Export' add-ons.
+- tick the checkbox to enable the add-on.
 
 ## Uninstalling
 
