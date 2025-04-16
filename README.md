@@ -12,7 +12,8 @@ Additional information can be found at: https://5g-mag.github.io/Getting-Started
 
 ## Installing
 
-The add-on is compatible with [Blender 3.6](https://www.blender.org/download/releases/3-6/).
+
+The add-on is compatible with [Blender 3.6 LTS and 4.2 LTS](https://www.blender.org/download/lts/).
 
 ### 1. Get the source code:
 
