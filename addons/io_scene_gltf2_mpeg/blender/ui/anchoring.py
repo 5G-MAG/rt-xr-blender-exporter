@@ -131,7 +131,7 @@ class XrAnchorObjectPropertiesPanel(bpy.types.Panel):
                 row.prop(xr_anchor, "trackable_marker_geo")
             elif xr_anchor.trackable_type == 'TRACKABLE_MARKER_3D':
                 row = layout.label(text="Not Available")
-            elif xr_anchor.trackable_type == 'TRACKABLE_MARKER_APPLICATION':
+            elif xr_anchor.trackable_type == 'TRACKABLE_APPLICATION':
                 row.prop(xr_anchor, "trackable_id") 
 
 classes = [
